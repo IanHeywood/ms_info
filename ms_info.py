@@ -58,10 +58,20 @@ def main():
         fldtab.done()
 
         if dospw:
+                chanwidths = []
                 spwtab = table(myms+'/SPECTRAL_WINDOW',ack=False)
                 nspw = len(spwtab)
+                spwnames = spwtab.getcol('NAME')
                 spwfreqs = spwtab.getcol('REF_FREQUENCY')
-                chanwidth = spwtab.getcol('CHAN_WIDTH')[0][0] # probably needs changing if SPWs have different widths
+                for name in spwnames:
+                        subtab = spwtab.query(query='NAME=="'+name+'"')
+                        chanwidth = subtab.getcol('CHAN_WIDTH')[0][0]/1e6
+                        chanwidths.append(chanwidth)
+
+                # try:
+                #         chanwidth = spwtab.getcol('CHAN_WIDTH')[0][0]/1e6
+                # except:
+                #         chanwidth = '?'
                 nchans = spwtab.getcol('NUM_CHAN')
                 spwtab.done()
 
@@ -105,13 +115,13 @@ def main():
         if dofield:
                 gi('---- FIELDS:')
                 print ''
-                gi('     ROW   ID            NAME          RA            DEC')
+                gi('     ROW   ID    NAME                RA            DEC')
                 for i in range(0,len(names)):
                         ra_rad = dirs[i][0][0]
                         dec_rad = dirs[i][0][1]
                         ra_hms = ac.decimal2hms(rad2deg(ra_rad),delimiter=':')
                         dec_dms = ac.decimal2dms(rad2deg(dec_rad),delimiter=':')
-                	print '     %-6s%-14s%-14s%-14s%-14s' % (i,str(ids[i]),names[i],ra_hms,dec_dms)
+                	print '     %-6s%-6s%-20s%-14s%-14s' % (i,str(ids[i]),names[i],ra_hms,dec_dms)
                 print ''
 
         if doscan:
@@ -130,7 +140,7 @@ def main():
                 print ''
                 gi('     ROW   CHANS         WIDTH[MHz]    REF_FREQ[MHz]')
                 for i in range(0,nspw):
-                        print '     %-6s%-14s%-14s%-14s' % (i,str(nchans[i]),str(chanwidth/1e6),str(spwfreqs[i]/1e6))
+                        print '     %-6s%-14s%-14s%-14s' % (i,str(nchans[i]),str(chanwidths[i]),str(spwfreqs[i]/1e6))
                 print ''
 
         if doant:
