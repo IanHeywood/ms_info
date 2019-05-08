@@ -67,11 +67,6 @@ def main():
                         subtab = spwtab.query(query='NAME=="'+name+'"')
                         chanwidth = subtab.getcol('CHAN_WIDTH')[0][0]/1e6
                         chanwidths.append(chanwidth)
-
-                # try:
-                #         chanwidth = spwtab.getcol('CHAN_WIDTH')[0][0]/1e6
-                # except:
-                #         chanwidth = '?'
                 nchans = spwtab.getcol('NUM_CHAN')
                 spwtab.done()
 
