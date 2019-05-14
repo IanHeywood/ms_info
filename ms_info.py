@@ -4,7 +4,8 @@
 
 import sys
 import numpy
-from astLib import astCoords as ac
+from astropy.coordinates import SkyCoord
+from astropy import units as u
 from pyrap.tables import table
 from optparse import OptionParser
 
@@ -110,13 +111,15 @@ def main():
         if dofield:
                 gi('---- FIELDS:')
                 print ''
-                gi('     ROW   ID    NAME                RA            DEC')
+                gi('     ROW   ID    NAME                RA              DEC')
                 for i in range(0,len(names)):
-                        ra_rad = dirs[i][0][0]
-                        dec_rad = dirs[i][0][1]
-                        ra_hms = ac.decimal2hms(rad2deg(ra_rad),delimiter=':')
-                        dec_dms = ac.decimal2dms(rad2deg(dec_rad),delimiter=':')
-                	print '     %-6s%-6s%-20s%-14s%-14s' % (i,str(ids[i]),names[i],ra_hms,dec_dms)
+                        ra_rad = float(dirs[i][0][0])
+                        dec_rad = float(dirs[i][0][1])
+                        coord = SkyCoord(ra_rad,dec_rad,frame='icrs',unit='rad')
+                        coord_str = coord.to_string('hmsdms')
+                        ra_str = coord_str.split(' ')[0]
+                        dec_str = coord_str.split(' ')[1]
+                        print '     %-6s%-6s%-20s%-16s%-16s' % (i,str(ids[i]),names[i],ra_str,dec_str)
                 print ''
 
         if doscan:
