@@ -3,7 +3,18 @@
 Examine a Measurement Set and print some basic information to the terminal. This is kind of like a standalone version of CASA's listobs task.
 
 ```
+Usage: ms_info.py [options] msname
 
+Options:
+  -h, --help  show this help message and exit
+  --nofield   Do not list FIELD information
+  --noscan    Do not list SCAN information
+  --nospw     Do not list SPECTRAL_WINDOW information
+  --noant     Do not list ANTENNA information
+```
+
+
+```
 Reading: 15A-310.sb30701840.eb31080533.57264.008705092594.ms
 
      Track length:             10766.0s (2.99 h)
@@ -11,10 +22,10 @@ Reading: 15A-310.sb30701840.eb31080533.57264.008705092594.ms
 
 ---- FIELDS:
 
-     ROW   ID    NAME                RA            DEC
-     0     0     SGRA                00:14:00.000  -29:00:28.06  
-     1     1     J1714-2514          00:45:00.000  -25:14:35.14  
-     2     2     1411+522=3C295      00:48:00.000  +52:12:09.14  
+     ROW   ID    NAME                RA              DEC
+     0     0     SGRA                17h45m40.0383s  -29d00m28.069s  
+     1     1     J1714-2514          17h14m47.857s   -25d14m35.144s  
+     2     2     1411+522=3C295      14h11m20.6477s  +52d12m09.141s  
 
 ---- SCANS:
 
