@@ -63,7 +63,6 @@ def get_flags(msname,ants,spw_chans,scan):
                     flag_percent = 100.0*round(float(counts[1])/float(numpy.sum(counts)),2)
                 flag_spectrum[i0+ii] = flag_percent
             flagtab.done()
-        print ant_name,flag_spectrum
         flag_stats.append((ant_name,flag_spectrum))
         t1 = time.time()
         if ant == 0:
