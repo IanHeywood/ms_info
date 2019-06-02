@@ -116,8 +116,8 @@ def main():
     parser.add_option('--noants',dest='doants',help='Do not show per-antenna flags percentages',action='store_false',default=True)
     parser.add_option('--noband',dest='doband',help='Do not show frequency chunk percentages',action='store_false',default=True)
     parser.add_option('--chunk',dest='chan_chunk',help='Number of channels to average per frequency bin (default = 32)',default=32)
-    parser.add_option('--o',dest='op_pickle',help='Name of flag stats pickle (default = flag_stats.p, inside MS)',default='')
-    parser.add_option('--f',dest='overwrite',help='Force overwrite of existing flag stats pickle',action='store_true',default=False)
+    parser.add_option('-o',dest='op_pickle',help='Name of flag stats pickle (default = flag_stats.p, inside MS)',default='')
+    parser.add_option('-f',dest='overwrite',help='Force overwrite of existing flag stats pickle',action='store_true',default=False)
 
     (options,args) = parser.parse_args()
     field = options.field
