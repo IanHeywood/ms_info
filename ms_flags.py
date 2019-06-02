@@ -87,11 +87,11 @@ def antenna_bar(flag_stats):
 
 
 def freq_bars(ants,spw_chans,flag_stats,chan_chunk):
-    print ''
-    print 'Flagged percentages across the band:'
-    print ''
-    print '                  0%       20%       40%       60%       80%       100%'
-    print '                  |         |         |         |         |         |'
+	print ''
+	print 'Flagged percentages across the band:'
+	print ''
+	print '                  0%       20%       40%       60%       80%       100%'
+	print '                  |         |         |         |         |         |'
 	flag_spec = numpy.zeros(len(flag_stats[0][1]))
 	chanranges = []
 	for i in range(0,len(flag_spec)):
@@ -104,7 +104,7 @@ def freq_bars(ants,spw_chans,flag_stats,chan_chunk):
 	for ii in range(0,len(flag_spec)):
 		length = int(flag_spec[ii]/2.0)
 		print ' %-9s %-7s %s '% (chanranges[ii],str(round(flag_spec[ii],1))+'%','∎' * length)
-    print ''
+	print ''
 
 
 def main():
