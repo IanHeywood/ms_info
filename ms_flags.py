@@ -126,8 +126,6 @@ def main():
     doband = options.doband
     chan_chunk = options.chan_chunk
     op_pickle = options.op_pickle
-    if op_pickle == '':
-        op_pickle = msname+'/flag_stats.p'
     overwrite = options.overwrite
 
     if len(args) != 1:
@@ -135,6 +133,9 @@ def main():
             sys.exit()
     else:
             msname = args[0].rstrip('/')
+
+    if op_pickle == '':
+        op_pickle = msname+'/flag_stats.p'
 
     ants,spw_chans = get_info(msname)
 
