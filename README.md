@@ -153,10 +153,10 @@ Options:
   
   Example output:
   
-  ```
-  Getting per-antenna flag stats, please wait.
+```
+Getting per-antenna flag stats, please wait.
 First antenna took 6.21 seconds, 60 to go.
-Estimated completion at  23:23:07.
+Estimated completion at 23:23:07.
 Done
 
 Flagged percentages per antenna:
