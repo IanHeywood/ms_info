@@ -110,8 +110,8 @@ def freq_bars(ants,spw_chans,flag_stats,chan_chunk):
 def main():
 
     parser = OptionParser(usage='%prog [options] msname')
-    parser.add_option('--field',dest='field',help='Select field ID (default = 0)',default='0')
-    parser.add_option('--corr',dest='corr',help='Select correlation product to use (default = 0)',default='0')
+    parser.add_option('--field',dest='field',help='Select field ID (default = 0)',default=0)
+    parser.add_option('--corr',dest='corr',help='Select correlation product to use (default = 0)',default=0)
     parser.add_option('--scan',dest='scan',help='Select only a specific scan number (default = all scans)',default='')
     parser.add_option('--noants',dest='doants',help='Do not show per-antenna flags percentages',action='store_false',default=True)
     parser.add_option('--noband',dest='doband',help='Do not show frequency chunk percentages',action='store_false',default=True)
@@ -120,8 +120,8 @@ def main():
     parser.add_option('-f',dest='overwrite',help='Force overwrite of existing flag stats pickle',action='store_true',default=False)
 
     (options,args) = parser.parse_args()
-    field = options.field
-    corr = options.corr
+    field = int(options.field)
+    corr = int(options.corr)
     scan = options.scan
     doants = options.doants
     doband = options.doband
