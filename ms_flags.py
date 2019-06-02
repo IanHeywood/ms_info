@@ -122,6 +122,7 @@ def main():
     (options,args) = parser.parse_args()
     field = options.field
     corr = options.corr
+    scan = options.scan
     doants = options.doants
     doband = options.doband
     chan_chunk = options.chan_chunk
