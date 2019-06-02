@@ -66,7 +66,7 @@ def get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk):
             elapsed = round(t1-t0,2)
             print 'First antenna took',elapsed,'seconds,',len(ants)-1,'to go.'
             etc = time.time()+(elapsed*float(len(ants)-1))
-            print 'Estimated completion at ',time.ctime(etc).split()[3]+'.'
+            print 'Estimated completion at',time.ctime(etc).split()[3]+'.'
     print 'Done'
     return flag_stats
 
