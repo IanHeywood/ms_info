@@ -23,7 +23,7 @@ def get_info(msname):
     return ants,spw_chans
 
 
-def get_flags(msname,ants,spw_chans,scan,field,corr):
+def get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk):
     print 'Getting per-antenna flag stats, please wait.'
     flag_stats = []
     tt = table(msname,ack=False)
@@ -86,7 +86,7 @@ def antenna_bar(flag_stats):
     print ''
 
 
-def freq_bars(ants,spw_chans,flag_stats):
+def freq_bars(ants,spw_chans,flag_stats,chan_chunk):
     print ''
     print 'Flagged percentages across the band:'
     print ''
@@ -139,7 +139,7 @@ def main():
     ants,spw_chans = get_info(msname)
 
     if not os.path.isfile(op_pickle) or overwrite:
-    	flag_stats = get_flags(msname,ants,spw_chans,scan,field,corr)
+    	flag_stats = get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk)
     	pickle.dump(flag_stats,open(op_pickle,'wb'))
     else:
     	print 'Reading',op_pickle
@@ -149,7 +149,7 @@ def main():
         antenna_bar(flag_stats)
 
     if doband:
-        freq_bars(ants,spw_chans,flag_stats)
+        freq_bars(ants,spw_chans,flag_stats,chan_chunk)
 
 
 if __name__ == '__main__':
