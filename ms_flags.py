@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # ian.heywood@physics.ox.ac.uk
 
+
 import os
 import sys
 import glob
@@ -11,11 +12,6 @@ import time
 from optparse import OptionParser
 from pyrap.tables import table
 
-msname = sys.argv[1].rstrip('/')
-op_pickle = msname+'/flag_stats.p'
-chan_chunk = 32
-corr = 0
-scan = ''
 
 def get_info(msname):
     tt = table(msname+'/ANTENNA',ack=False)
@@ -27,7 +23,7 @@ def get_info(msname):
     return ants,spw_chans
 
 
-def get_flags(msname,ants,spw_chans,scan):
+def get_flags(msname,ants,spw_chans,scan,field,corr):
     print 'Getting per-antenna flag stats, please wait.'
     flag_stats = []
     tt = table(msname,ack=False)
@@ -39,30 +35,31 @@ def get_flags(msname,ants,spw_chans,scan):
             sys.exit()
         t0 = time.time()
         ant_name = ants[ant]
-        taql = 'ANTENNA1=='+str(ant)+' || ANTENNA2=='+str(ant)
+        taql = 'ANTENNA1=='+str(ant)+' || ANTENNA2=='+str(ant)+' && FIELD_ID=='+str(field)
         if scan != '':
             taql += '&& SCAN_NUMBER=='+str(scan)
         flagtab = tt.query(query=taql,columns='DATA_DESC_ID,FLAG')
         flag_col = flagtab.getcol('FLAG')
         ddid_col = flagtab.getcol('DATA_DESC_ID')
+        flagtab.done()
         for dd in range(0,len(spw_chans)):
             interval = spw_chans[dd]/chan_chunk
             i0 = dd*interval
             i1 = ((dd+1)*interval)-1
             mask = ddid_col == dd
             flags = flag_col[mask]
-            for ii in range(0,interval):
-                ch0 = ii*chan_chunk
-                ch1 = ((ii+1)*chan_chunk)-1
-                vals,counts = numpy.unique(flags[:,ch0:ch1,corr],return_counts=True)
-                if len(vals) == 1 and vals == True:
-                    flag_percent = 100.0
-                elif len(vals) == 1 and vals == False:
-                    flag_percent = 0.0
-                else:
-                    flag_percent = 100.0*round(float(counts[1])/float(numpy.sum(counts)),2)
-                flag_spectrum[i0+ii] = flag_percent
-            flagtab.done()
+            if len(flags.shape) == 3:
+                for ii in range(0,interval):
+                    ch0 = ii*chan_chunk
+                    ch1 = ((ii+1)*chan_chunk)-1
+                    vals,counts = numpy.unique(flags[:,ch0:ch1,corr],return_counts=True)
+                    if len(vals) == 1 and vals == True:
+                        flag_percent = 100.0
+                    elif len(vals) == 1 and vals == False:
+                        flag_percent = 0.0
+                    else:
+                        flag_percent = 100.0*round(float(counts[1])/float(numpy.sum(counts)),2)
+                    flag_spectrum[i0+ii] = flag_percent
         flag_stats.append((ant_name,flag_spectrum))
         t1 = time.time()
         if ant == 0:
@@ -71,16 +68,30 @@ def get_flags(msname,ants,spw_chans,scan):
             etc = time.time()+(elapsed*float(len(ants)-1))
             print 'Estimated completion at ',time.ctime(etc).split()[3]+'.'
     print 'Done'
-    print flag_stats
     return flag_stats
 
 
-def antenna_bar(ant,spectrum):
-	average_pc = numpy.mean(spectrum)
-	length = int(average_pc / 2.0)
-	print ' %-9s %-7s %s'% (ant,str(round(average_pc,1))+'%','∎' * length)
+def antenna_bar(flag_stats):
+    print ''
+    print 'Flagged percentages per antenna:'
+    print ''
+    print '                  0%       20%       40%       60%       80%       100%'
+    print '                  |         |         |         |         |         |'
+    for ii in flag_stats:
+        ant = ii[0]
+        spectrum = ii[1]
+        average_pc = numpy.mean(spectrum)
+        length = int(average_pc / 2.0)
+        print ' %-9s %-7s %s'% (ant,str(round(average_pc,1))+'%','∎' * length)
+    print ''
+
 
 def freq_bars(ants,spw_chans,flag_stats):
+    print ''
+    print 'Flagged percentages across the band:'
+    print ''
+    print '                  0%       20%       40%       60%       80%       100%'
+    print '                  |         |         |         |         |         |'
 	flag_spec = numpy.zeros(len(flag_stats[0][1]))
 	chanranges = []
 	for i in range(0,len(flag_spec)):
@@ -93,27 +104,54 @@ def freq_bars(ants,spw_chans,flag_stats):
 	for ii in range(0,len(flag_spec)):
 		length = int(flag_spec[ii]/2.0)
 		print ' %-9s %-7s %s '% (chanranges[ii],str(round(flag_spec[ii],1))+'%','∎' * length)
+    print ''
 
 
-ants,spw_chans = get_info(msname)
+def main():
 
-if not os.path.isfile(op_pickle):
-	flag_stats = get_flags(msname,ants,spw_chans,scan)
-	pickle.dump(flag_stats,open(op_pickle,'wb'))
-else:
-	print 'Reading',op_pickle
-	flag_stats = pickle.load(open(op_pickle,'rb'))
-print ''
-print 'Flagged percentages per antenna:'
-print ''
-print '                  0%       20%       40%       60%       80%       100%'
-print '                  |         |         |         |         |         |'
-for ii in flag_stats:
-	antenna_bar(ii[0],ii[1])
+    parser = OptionParser(usage='%prog [options] msname')
+    parser.add_option('--field',dest='field',help='Select field ID (default = 0)',default='0')
+    parser.add_option('--corr',dest='corr',help='Select correlation product to use (default = 0)',default='0')
+    parser.add_option('--scan',dest='scan',help='Select only a specific scan number (default = all scans)',default='')
+    parser.add_option('--noants',dest='doants',help='Do not show per-antenna flags percentages',action='store_false',default=True)
+    parser.add_option('--noband',dest='doband',help='Do not show frequency chunk percentages',action='store_false',default=True)
+    parser.add_option('--chunk',dest='chan_chunk',help='Number of channels to average per frequency bin (default = 32)',default=32)
+    parser.add_option('--o',dest='op_pickle',help='Name of flag stats pickle (default = flag_stats.p, inside MS)',default='')
+    parser.add_option('--f',dest='overwrite',help='Force overwrite of existing flag stats pickle',action='store_true',default=False)
 
-print ''
-print 'Flagged percentages across the band:'
-print ''
-print '                  0%       20%       40%       60%       80%       100%'
-print '                  |         |         |         |         |         |'
-freq_bars(ants,spw_chans,flag_stats)
+    (options,args) = parser.parse_args()
+    field = options.field
+    corr = options.corr
+    doants = options.doants
+    doband = options.doband
+    chan_chunk = options.chan_chunk
+    op_pickle = options.op_pickle
+    if op_pickle == '':
+        op_pickle = msname+'/flag_stats.p'
+    overwrite = options.overwrite
+
+    if len(args) != 1:
+            print 'Please specify a Measurement Set'
+            sys.exit()
+    else:
+            msname = args[0].rstrip('/')
+
+    ants,spw_chans = get_info(msname)
+
+    if not os.path.isfile(op_pickle) or overwrite:
+    	flag_stats = get_flags(msname,ants,spw_chans,scan,field,corr)
+    	pickle.dump(flag_stats,open(op_pickle,'wb'))
+    else:
+    	print 'Reading',op_pickle
+    	flag_stats = pickle.load(open(op_pickle,'rb'))
+
+    if doants:
+        antenna_bar(flag_stats)
+
+    if doband:
+        freq_bars(ants,spw_chans,flag_stats)
+
+
+if __name__ == '__main__':
+
+    main()
