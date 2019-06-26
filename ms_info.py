@@ -112,7 +112,7 @@ def main():
 	print '     Observation end:          '+end_time
 	print ''
 	
-        print '     Track length:             '+str(length)+'s ('+str(round((length/3600.0),2))+' h)'
+        print '     Track length:             '+str(length)+' s ('+str(round((length/3600.0),2))+' h)'
         print '     Mean integration time:    '+str(meanexp)+' s'
         print ''
 
