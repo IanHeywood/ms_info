@@ -14,7 +14,7 @@ from pyrap.tables import table
 
 
 def get_info(msname):
-    tt = table(msname+'/ANTENNA',ack=False)
+    tt = table(msname+'/ANTENNA', ack=False)
     ants = tt.getcol('NAME')
     tt.done()
     tt = table(msname+'/SPECTRAL_WINDOW',ack=False)
@@ -39,7 +39,9 @@ def get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk):
         if scan != '':
             taql += '&& SCAN_NUMBER=='+str(scan)
         flagtab = tt.query(query=taql,columns='DATA_DESC_ID,FLAG')
-        flag_col = flagtab.getcol('FLAG')
+        cell_shape = flagtab.getcell('FLAG', 0).shape
+        flag_col = numpy.empty((flagtab.nrows(), cell_shape[0], cell_shape[1]), dtype=numpy.bool)
+        flagtab.getcolnp('FLAG', flag_col)
         ddid_col = flagtab.getcol('DATA_DESC_ID')
         flagtab.done()
         for dd in range(0,len(spw_chans)):
