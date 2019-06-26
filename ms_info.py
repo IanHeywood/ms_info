@@ -6,6 +6,7 @@ import sys
 import numpy
 from astropy.coordinates import SkyCoord
 from astropy import units as u
+from astropy.time import Time
 from pyrap.tables import table
 from optparse import OptionParser
 
@@ -51,6 +52,9 @@ def main():
         t0 = times[0]
         t1 = times[-1]
         length = round((t1 - t0),0)
+	
+	start_time = Time(t0/86400.0,format='mjd').iso
+	end_time = Time(t1/86400.0,format='mjd').iso
 
         fldtab = table(myms+'/FIELD',ack=False)
         names = fldtab.getcol('NAME')
@@ -104,6 +108,10 @@ def main():
 
         maintab.done()
 
+	print '     Observation start:        '+start_time
+	print '     Observation end:          '+end_time
+	print ''
+	
         print '     Track length:             '+str(length)+'s ('+str(round((length/3600.0),2))+' h)'
         print '     Mean integration time:    '+str(meanexp)+' s'
         print ''
