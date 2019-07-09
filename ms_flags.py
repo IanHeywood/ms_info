@@ -35,7 +35,10 @@ def get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk):
             sys.exit()
         t0 = time.time()
         ant_name = ants[ant]
-        taql = 'ANTENNA1=='+str(ant)+' || ANTENNA2=='+str(ant)+' && FIELD_ID=='+str(field)
+	if field == -1:
+	        taql = 'ANTENNA1=='+str(ant)+' || ANTENNA2=='+str(ant)
+	else:
+		taql = 'ANTENNA1=='+str(ant)+' || ANTENNA2=='+str(ant)+' && FIELD_ID=='+str(field)
         if scan != '':
             taql += '&& SCAN_NUMBER=='+str(scan)
         flagtab = tt.query(query=taql,columns='DATA_DESC_ID,FLAG')
@@ -112,7 +115,7 @@ def freq_bars(ants,spw_chans,flag_stats,chan_chunk):
 def main():
 
     parser = OptionParser(usage='%prog [options] msname')
-    parser.add_option('--field',dest='field',help='Select field ID (default = 0)',default=0)
+    parser.add_option('--field',dest='field',help='Select field ID (default = all)',default=-1)
     parser.add_option('--corr',dest='corr',help='Select correlation product to use (default = 0)',default=0)
     parser.add_option('--scan',dest='scan',help='Select only a specific scan number (default = all scans)',default='')
     parser.add_option('--noants',dest='doants',help='Do not show per-antenna flags percentages',action='store_false',default=True)
