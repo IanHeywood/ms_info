@@ -57,6 +57,9 @@ def get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk):
                 for ii in range(0,interval):
                     ch0 = ii*chan_chunk
                     ch1 = ((ii+1)*chan_chunk)-1
+
+#                    flag_percent = 100.0*round(flags[:,ch0:ch1,corr].sum() / float(flags[:,ch0:ch1,corr].size),2)
+
                     vals,counts = numpy.unique(flags[:,ch0:ch1,corr],return_counts=True)
                     if len(vals) == 1 and vals == True:
                         flag_percent = 100.0
@@ -64,6 +67,7 @@ def get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk):
                         flag_percent = 0.0
                     else:
                         flag_percent = 100.0*round(float(counts[1])/float(numpy.sum(counts)),2)
+
                     flag_spectrum[i0+ii] = flag_percent
         flag_stats.append((ant_name,flag_spectrum))
         t1 = time.time()
