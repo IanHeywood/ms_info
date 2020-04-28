@@ -96,8 +96,8 @@ def main():
             sfield = numpy.unique(subtab.getcol('FIELD_ID'))[0]
             if 'STATE_ID' in subtab.colnames():
                 ii = numpy.unique(subtab.getcol('STATE_ID'))
-                if ii > 0:
-                    sintent = modes[numpy.unique(subtab.getcol('STATE_ID'))]
+                if ii[0] > 0:
+                    sintent = modes[ii[0]]
                 else:
                     sintent = 'None'
             else:
