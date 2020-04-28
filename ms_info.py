@@ -140,7 +140,7 @@ def main():
     if dofield:
         gi('---- FIELDS:',docolour)
         print('')
-        gi('     ROW   SOURCE_ID  NAME                RA[hms]           DEC[dms]          RA[deg]   DEC[deg]  EXP[s]    EXP[s]',docolour)
+        gi('     ROW   SOURCE_ID  NAME                  RA[hms]           DEC[dms]          RA[deg]   DEC[deg]  EXP[s]    EXP[s]',docolour)
         for i in range(0,len(names)):
             ra_rad = float(dirs[i][0][0])
             dec_rad = float(dirs[i][0][1])
@@ -152,23 +152,23 @@ def main():
             dec_str = coord_str.split(' ')[1]
             exp_s = str(round(field_integrations[i][1],0))
             exp_h = str(round(field_integrations[i][1]/3600.0,3))
-            print('     %-6s%-11s%-20s%-18s%-18s%-10s%-10s%-10s%-10s' % (i,str(ids[i]),names[i],ra_str,dec_str,ra_deg,ra_deg,exp_s,exp_h))
+            print('     %-6s%-11s%-22s%-18s%-18s%-10s%-10s%-10s%-10s' % (i,str(ids[i]),names[i],ra_str,dec_str,ra_deg,ra_deg,exp_s,exp_h))
         print('')
 
     if doscan:
         gi('---- SCANS:',docolour)
         print('')
-        gi('     SCAN  SOURCE_ID  NAME                LENGTH[s]         INTS        INTENT',docolour)
+        gi('     SCAN  SOURCE_ID  NAME                  LENGTH[s]         INTS        INTENT',docolour)
         for sc in scanlist:
-            print('     %-6s%-11s%-20s%-18s%-12s%s' % (sc[0],sc[1],names[sc[1]],sc[2],sc[3],sc[4]))
+            print('     %-6s%-11s%-22s%-18s%-12s%s' % (sc[0],sc[1],names[sc[1]],sc[2],sc[3],sc[4]))
         print('')
 
     if dospw:
         gi('---- SPECTRAL WINDOWS:',docolour)
         print('')
-        gi('     ROW   CHANS      WIDTH[MHz]          REF_FREQ[MHz]',docolour)
+        gi('     ROW   CHANS      WIDTH[MHz]            REF_FREQ[MHz]',docolour)
         for i in range(0,nspw):
-                print('     %-6s%-11s%-20s%-14s' % (i,str(nchans[i]),str(chanwidths[i]),str(spwfreqs[i]/1e6)))
+                print('     %-6s%-11s%-22s%-14s' % (i,str(nchans[i]),str(chanwidths[i]),str(spwfreqs[i]/1e6)))
         print('')
 
     if doant:
