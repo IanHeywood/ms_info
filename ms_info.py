@@ -140,7 +140,7 @@ def main():
     if dofield:
         gi('---- FIELDS:',docolour)
         print('')
-        gi('     ROW   SOURCE_ID  NAME                  RA[hms]           DEC[dms]          RA[deg]   DEC[deg]  EXP[s]    EXP[s]',docolour)
+        gi('     ROW   SOURCE_ID  NAME                  RA[hms]           DEC[dms]          RA[deg]   DEC[deg]  EXP[s]    EXP[h]',docolour)
         for i in range(0,len(names)):
             ra_rad = float(dirs[i][0][0])
             dec_rad = float(dirs[i][0][1])
