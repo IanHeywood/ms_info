@@ -152,7 +152,7 @@ def main():
             dec_str = coord_str.split(' ')[1]
             exp_s = str(round(field_integrations[i][1],0))
             exp_h = str(round(field_integrations[i][1]/3600.0,3))
-            print('     %-6s%-11s%-22s%-18s%-18s%-10s%-10s%-10s%-10s' % (i,str(ids[i]),names[i],ra_str,dec_str,ra_deg,ra_deg,exp_s,exp_h))
+            print('     %-6s%-11s%-22s%-18s%-18s%-10s%-10s%-10s%-10s' % (i,str(ids[i]),names[i],ra_str,dec_str,ra_deg,dec_deg,exp_s,exp_h))
         print('')
 
     if doscan:
