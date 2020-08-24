@@ -35,10 +35,10 @@ def get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk):
             sys.exit()
         t0 = time.time()
         ant_name = ants[ant]
-	if field == -1:
-	        taql = 'ANTENNA1=='+str(ant)+' || ANTENNA2=='+str(ant)
-	else:
-		taql = 'ANTENNA1=='+str(ant)+' || ANTENNA2=='+str(ant)+' && FIELD_ID=='+str(field)
+    if field == -1:
+            taql = 'ANTENNA1=='+str(ant)+' || ANTENNA2=='+str(ant)
+    else:
+        taql = 'ANTENNA1=='+str(ant)+' || ANTENNA2=='+str(ant)+' && FIELD_ID=='+str(field)
         if scan != '':
             taql += '&& SCAN_NUMBER=='+str(scan)
         flagtab = tt.query(query=taql,columns='DATA_DESC_ID,FLAG')
@@ -96,24 +96,24 @@ def antenna_bar(flag_stats):
 
 
 def freq_bars(ants,spw_chans,flag_stats,chan_chunk):
-	print('')
-	print('Flagged percentages across the band:')
-	print('')
-	print('                  0%       20%       40%       60%       80%       100%')
-	print('                  |         |         |         |         |         |')
-	flag_spec = numpy.zeros(len(flag_stats[0][1]))
-	chanranges = []
-	for i in range(0,len(flag_spec)):
-		flag_chan = []
-		for j in range(0,len(ants)):
-			flag_chan.append(flag_stats[j][1][i])
-		flag_chan = numpy.mean(numpy.array(flag_chan))
-		flag_spec[i] = flag_chan
-		chanranges.append(str(i*chan_chunk)+'-'+str(((i+1)*chan_chunk)-1))
-	for ii in range(0,len(flag_spec)):
-		length = int(flag_spec[ii]/2.0)
-		print(' %-9s %-7s %s '% (chanranges[ii],str(round(flag_spec[ii],1))+'%','∎' * length))
-	print('')
+    print('')
+    print('Flagged percentages across the band:')
+    print('')
+    print('                  0%       20%       40%       60%       80%       100%')
+    print('                  |         |         |         |         |         |')
+    flag_spec = numpy.zeros(len(flag_stats[0][1]))
+    chanranges = []
+    for i in range(0,len(flag_spec)):
+        flag_chan = []
+        for j in range(0,len(ants)):
+            flag_chan.append(flag_stats[j][1][i])
+        flag_chan = numpy.mean(numpy.array(flag_chan))
+        flag_spec[i] = flag_chan
+        chanranges.append(str(i*chan_chunk)+'-'+str(((i+1)*chan_chunk)-1))
+    for ii in range(0,len(flag_spec)):
+        length = int(flag_spec[ii]/2.0)
+        print(' %-9s %-7s %s '% (chanranges[ii],str(round(flag_spec[ii],1))+'%','∎' * length))
+    print('')
 
 
 def main():
@@ -150,11 +150,11 @@ def main():
     ants,spw_chans = get_info(msname)
 
     if not os.path.isfile(op_pickle) or overwrite:
-    	flag_stats = get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk)
-    	pickle.dump(flag_stats,open(op_pickle,'wb'))
+        flag_stats = get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk)
+        pickle.dump(flag_stats,open(op_pickle,'wb'))
     else:
-    	print('Reading',op_pickle)
-    	flag_stats = pickle.load(open(op_pickle,'rb'))
+        print('Reading',op_pickle)
+        flag_stats = pickle.load(open(op_pickle,'rb'))
 
     if doants:
         antenna_bar(flag_stats)
