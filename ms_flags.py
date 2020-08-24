@@ -24,14 +24,14 @@ def get_info(msname):
 
 
 def get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk):
-    print 'Getting per-antenna flag stats, please wait.'
+    print('Getting per-antenna flag stats, please wait.')
     flag_stats = []
     tt = table(msname,ack=False)
     for ant in range(0,len(ants)):
         try:
             flag_spectrum = numpy.zeros(numpy.sum(spw_chans/chan_chunk))
         except:
-            print "Number of channels divided by chan_chunk must be integer"
+            print('Number of channels divided by chan_chunk must be integer')
             sys.exit()
         t0 = time.time()
         ant_name = ants[ant]
@@ -73,34 +73,34 @@ def get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk):
         t1 = time.time()
         if ant == 0:
             elapsed = round(t1-t0,2)
-            print 'First antenna took',elapsed,'seconds,',len(ants)-1,'to go.'
+            print('First antenna took',elapsed,'seconds,',len(ants)-1,'to go.')
             etc = time.time()+(elapsed*float(len(ants)-1))
-            print 'Estimated completion at',time.ctime(etc).split()[3]+'.'
-    print 'Done'
+            print('Estimated completion at',time.ctime(etc).split()[3]+'.')
+    print('Done')
     return flag_stats
 
 
 def antenna_bar(flag_stats):
-    print ''
-    print 'Flagged percentages per antenna:'
-    print ''
-    print '                  0%       20%       40%       60%       80%       100%'
-    print '                  |         |         |         |         |         |'
+    print('')
+    print('Flagged percentages per antenna:')
+    print('')
+    print('                  0%       20%       40%       60%       80%       100%')
+    print('                  |         |         |         |         |         |')
     for ii in flag_stats:
         ant = ii[0]
         spectrum = ii[1]
         average_pc = numpy.mean(spectrum)
         length = int(average_pc / 2.0)
-        print ' %-9s %-7s %s'% (ant,str(round(average_pc,1))+'%','∎' * length)
-    print ''
+        print(' %-9s %-7s %s'% (ant,str(round(average_pc,1))+'%','∎' * length))
+    print('')
 
 
 def freq_bars(ants,spw_chans,flag_stats,chan_chunk):
-	print ''
-	print 'Flagged percentages across the band:'
-	print ''
-	print '                  0%       20%       40%       60%       80%       100%'
-	print '                  |         |         |         |         |         |'
+	print('')
+	print('Flagged percentages across the band:')
+	print('')
+	print('                  0%       20%       40%       60%       80%       100%')
+	print('                  |         |         |         |         |         |')
 	flag_spec = numpy.zeros(len(flag_stats[0][1]))
 	chanranges = []
 	for i in range(0,len(flag_spec)):
@@ -112,8 +112,8 @@ def freq_bars(ants,spw_chans,flag_stats,chan_chunk):
 		chanranges.append(str(i*chan_chunk)+'-'+str(((i+1)*chan_chunk)-1))
 	for ii in range(0,len(flag_spec)):
 		length = int(flag_spec[ii]/2.0)
-		print ' %-9s %-7s %s '% (chanranges[ii],str(round(flag_spec[ii],1))+'%','∎' * length)
-	print ''
+		print(' %-9s %-7s %s '% (chanranges[ii],str(round(flag_spec[ii],1))+'%','∎' * length))
+	print('')
 
 
 def main():
@@ -139,7 +139,7 @@ def main():
     overwrite = options.overwrite
 
     if len(args) != 1:
-            print 'Please specify a Measurement Set'
+            print('Please specify a Measurement Set')
             sys.exit()
     else:
             msname = args[0].rstrip('/')
@@ -153,7 +153,7 @@ def main():
     	flag_stats = get_flags(msname,ants,spw_chans,scan,field,corr,chan_chunk)
     	pickle.dump(flag_stats,open(op_pickle,'wb'))
     else:
-    	print 'Reading',op_pickle
+    	print('Reading',op_pickle)
     	flag_stats = pickle.load(open(op_pickle,'rb'))
 
     if doants:
