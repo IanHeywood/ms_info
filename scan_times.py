@@ -5,6 +5,7 @@
 from astropy.time import Time
 from pyrap.tables import table
 import numpy
+import pickle
 import sys
 
 
@@ -31,6 +32,9 @@ def main():
 	field_names = field_tab.getcol('NAME')
 	n_fields = len(field_names)
 	field_tab.done()
+
+	scan_list = []
+	pickle_name = 'scans_'+myms+'.p'
 
 	print(myms+' | '+str(n_fields)+' fields | '+str(n_scans)+' scans | track = '+str(track_length)+' h | t_int = '+str(exposure)+' s')
 
@@ -59,7 +63,11 @@ def main():
 			print('%-5i %-12s %-5s %-25s %-20f %-20f %-20f %-7s %-7s %-12s %-5i' % 
 				(scan,field_name,field_id,t_iso,tc,t0,t1,int0,int1,duration,n_int))
 
+			scan_list.append((scan,field_name_field_id,int0,int1,n_int))
+
 		print('-'*len(header))
+
+		pickle.dump(open(pickle_name,'wb'))
 
 	else:
 
