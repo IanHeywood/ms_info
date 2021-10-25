@@ -15,7 +15,7 @@ def main():
 		print('Please specify a Measurement Set')
 		sys.exit()
 	elif len(sys.argv) > 1:
-		myms = sys.argv[1]
+		myms = sys.argv[1].rstrip('/')
 
 	if len(sys.argv) > 2:
 		myscan = sys.argv[2]
