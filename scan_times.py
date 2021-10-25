@@ -63,7 +63,7 @@ def main():
 			print('%-5i %-12s %-5s %-25s %-20f %-20f %-20f %-7s %-7s %-12s %-5i' % 
 				(scan,field_name,field_id,t_iso,tc,t0,t1,int0,int1,duration,n_int))
 
-			scan_list.append((scan,field_name_field_id,int0,int1,n_int))
+			scan_list.append((scan,field_name,field_id,int0,int1,n_int))
 
 		print('-'*len(header))
 
