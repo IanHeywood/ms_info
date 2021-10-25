@@ -67,7 +67,7 @@ def main():
 
 		print('-'*len(header))
 
-		pickle.dump(open(pickle_name,'wb'))
+		pickle.dump(scan_list,open(pickle_name,'wb'))
 
 	else:
 
