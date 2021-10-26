@@ -52,22 +52,28 @@ def main():
     obs_lon = 21.443001467965008
     loc = EarthLocation.from_geodetic(obs_lat,obs_lon) #,obs_height,ellipsoid)
 
-
     myms = sys.argv[1].rstrip('/')
     maintab = table(myms,ack=False)
     scans = list(numpy.unique(maintab.getcol('SCAN_NUMBER')))
     ids,names,dirs = get_fields(myms)
 
     logfile = 'sun_'+myms+'.log'
+
     logging.basicConfig(filename=logfile, level=logging.DEBUG, format='%(asctime)s |  %(message)s', datefmt='%d/%m/%Y %H:%M:%S ')
+    stream = logging.StreamHandler()
+    stream.setLevel(logging.DEBUG)
+    streamformat = logging.Formatter('%(asctime)s |  %(message)s', datefmt='%d/%m/%Y %H:%M:%S ')
+    stream.setFormatter(streamformat)
+    mylogger = logging.getLogger(__name__)
+    mylogger.setLevel(logging.DEBUG)
+    mylogger.addHandler(stream)
 
-
-    logging.info(myms+' | '+str(len(ids))+' fields | '+str(len(scans))+' scans')
+    mylogger.info(myms+' | '+str(len(ids))+' fields | '+str(len(scans))+' scans')
     #header = 'Scan  Field        ID    t[iso]                    t[s]                 t0[s]                t1[s]                int0    int1    Duration[m]  N_int'
     header = 't[iso]                       Scan  Field Name         SunRA[deg]   SunDec[deg]  SunRA[hms]       SunDec[dms]      SunSep[deg]  MoonRA[deg]  MoonDec[deg] MoonRA[hms]      MoonDec[dms]     MoonSep[deg]'
-    logging.info('-'*len(header))
-    logging.info(header)
-    logging.info('-'*len(header))
+    mylogger.info('-'*len(header))
+    mylogger.info(header)
+    mylogger.info('-'*len(header))
     for scan in scans:
         subtab = maintab.query(query='SCAN_NUMBER=='+str(scan))
         field = numpy.unique(subtab.getcol('FIELD_ID'))[0]
@@ -90,11 +96,10 @@ def main():
         delta_dec_moon = field_dec - moon_dec
         sun_sep = calcsep(field_ra,field_dec,sun_ra,sun_dec)
         moon_sep = calcsep(field_ra,field_dec,moon_ra,moon_dec)
-    #   print field,name,sun_sep
-        logging.info('%-28s %-5i %-5i %-12s %-12f %-12f %-16s %-16s %-12f %-12f %-12f %-16s %-16s %-12f' %
+        mylogger.info('%-28s %-5i %-5i %-12s %-12f %-12f %-16s %-16s %-12f %-12f %-12f %-16s %-16s %-12f' %
             (t.iso,scan,field,name,sun_ra,sun_dec,sun_hms,sun_dms,sun_sep,moon_ra,moon_dec,moon_hms,moon_dms,moon_sep))
 
-    logging.info('-'*len(header))
+    mylogger.info('-'*len(header))
 
 
 if __name__ == "__main__":
